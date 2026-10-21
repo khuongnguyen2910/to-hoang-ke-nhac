@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tô Hoàng Kể Nhạc</title>
+<meta name="description" content="Tôi nghe chuyện của bạn, rồi kể lại bằng nhạc.">
+<meta name="theme-color" content="#221A16">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Be+Vietnam+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+:root{
+  --walnut:#221A16;
+  --walnut-2:#2C221D;
+  --walnut-3:#3A2E27;
+  --lamp:#E6A94B;
+  --lamp-2:#F0B95C;
+  --paper:#EAE2D0;
+  --ink:#2B2420;
+  --ink-soft:#5E534B;
+  --mist:#B9AFA2;
+  --mist-2:#8C8276;
+  --teal:#4F7F7C;
+  --line:rgba(234,226,208,.14);
+  --serif:'Cormorant Garamond','Times New Roman',Georgia,serif;
+  --sans:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --gutter:clamp(20px,5vw,72px);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--walnut);color:var(--paper);font:300 1rem/1.6 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-50%;width:200%;height:200%;z-index:50;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:4px;border-radius:4px}
+section{position:relative;padding:clamp(76px,10vw,140px) var(--gutter);scroll-margin-top:72px}
+
+/* curtain */
+.curtain{position:fixed;inset:0;z-index:60;background:var(--walnut);display:grid;place-items:center;pointer-events:none;animation:curtainUp .9s var(--ease) 1.15s forwards}
+.curtain span{font:italic 500 clamp(2.2rem,6vw,4.2rem)/1 var(--serif);color:var(--paper);opacity:0;animation:curtainWord 1.15s var(--ease) forwards}
+@keyframes curtainWord{0%{opacity:0;transform:translateY(14px)}40%{opacity:1;transform:none}100%{opacity:1}}
+@keyframes curtainUp{to{transform:translateY(-101%)}}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px var(--gutter);transition:background .5s,border-color .5s}
+.nav.scrolled{background:rgba(34,26,22,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{font:italic 600 1.35rem/1 var(--serif);text-decoration:none}
+.brand small{display:block;font:300 .7rem/1 var(--sans);color:var(--mist);margin-top:5px}
+.nav-links{display:none;gap:30px}
+.nav-links a{color:var(--mist);text-decoration:none;font-size:.86rem;transition:color .3s}
+.nav-links a:hover{color:var(--paper)}
+.clock{font:500 .8rem/1 var(--sans);color:var(--mist);font-variant-numeric:tabular-nums;white-space:nowrap}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--lamp)}
+@media(min-width:900px){.nav-links{display:flex}}
+
+/* markers (song structure) */
+.marker{display:flex;align-items:center;gap:12px;margin:0;font:italic 500 1.05rem/1 var(--serif);color:var(--mist)}
+.marker::before{content:"";width:28px;height:1px;background:var(--mist-2)}
+.marker time{font:400 .74rem/1 var(--sans);color:var(--mist-2);font-variant-numeric:tabular-nums}
+.marker time:empty{display:none}
+
+/* hero */
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px var(--gutter) 0;overflow:hidden;isolation:isolate}
+.lamp{position:absolute;z-index:-1;width:80vmax;height:80vmax;left:var(--mx,70%);top:var(--my,30%);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(230,169,75,.24),rgba(230,169,75,.10) 32%,rgba(230,169,75,.03) 58%,transparent 74%);filter:blur(28px);transition:left 1.6s var(--ease),top 1.6s var(--ease);pointer-events:none}
+@media(hover:none){.hero .lamp{animation:drift 16s ease-in-out infinite alternate}}
+@keyframes drift{from{left:74%;top:26%}to{left:38%;top:50%}}
+.hero h1{margin:18px 0 0;font:italic 500 clamp(3.2rem,10vw,8.4rem)/.97 var(--serif);letter-spacing:-.015em}
+.hero h1 .l{display:block;overflow:hidden;padding:0 .08em .09em 0;margin-bottom:-.09em}
+.hero h1 .l span{display:block;transform:translateY(112%);animation:rise 1.2s var(--ease) forwards}
+.hero h1 .l:nth-child(1) span{animation-delay:1.3s}
+.hero h1 .l:nth-child(2) span{animation-delay:1.42s}
+.hero h1 .l:nth-child(3) span{animation-delay:1.54s}
+@keyframes rise{to{transform:none}}
+.hero .lead{margin:28px 0 0;max-width:34ch;font-size:clamp(1rem,1.6vw,1.2rem);color:var(--mist);opacity:0;animation:fade 1s var(--ease) 1.85s forwards}
+.cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin:34px 0 0;opacity:0;animation:fade 1s var(--ease) 2.05s forwards}
+@keyframes fade{to{opacity:1}}
+
+.btn{display:inline-flex;align-items:center;gap:12px;padding:15px 24px;border-radius:999px;background:var(--lamp);color:var(--walnut);text-decoration:none;font:500 .92rem/1 var(--sans);transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .3s}
+.btn:hover{transform:translateY(-2px);background:var(--lamp-2);box-shadow:0 16px 40px -14px rgba(230,169,75,.6)}
+.btn .dot{width:8px;height:8px;border-radius:50%;background:var(--walnut);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.55);opacity:.55}}
+.link{position:relative;text-decoration:none;font:400 .92rem/1 var(--sans);padding-bottom:5px}
+.link::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--mist-2)}
+.link:hover::after{background:var(--lamp);animation:swipe .7s var(--ease)}
+@keyframes swipe{0%{transform:scaleX(1);transform-origin:right}49%{transform:scaleX(0);transform-origin:right}50%{transform:scaleX(0);transform-origin:left}100%{transform:scaleX(1);transform-origin:left}}
+
+.wave{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;height:96px;margin:64px calc(var(--gutter) * -1) 0;padding:0 var(--gutter);overflow:hidden;opacity:0;animation:fade 1.2s var(--ease) 1.6s forwards}
+.wave i{flex:0 0 auto;width:clamp(3px,.55vw,8px);height:calc(var(--h) * 1%);border-radius:2px 2px 0 0;background:var(--mist-2);transform-origin:bottom;animation:breathe var(--d,2.4s) ease-in-out var(--delay,0s) infinite alternate;transition:background .35s}
+.wave i.played{background:var(--lamp)}
+.wave i.head{background:var(--paper)}
+@keyframes breathe{from{transform:scaleY(.5)}to{transform:scaleY(1)}}
+
+/* reveal */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
+.js .card.reveal{transition-delay:calc(var(--i,0) * 90ms)}
+
+h2{margin:0;font:italic 500 clamp(2.3rem,5.6vw,4.6rem)/1.02 var(--serif);letter-spacing:-.01em;max-width:16ch}
+h3{margin:0}
+.two{display:grid;gap:40px}
+.side{display:grid;gap:16px;align-content:start}
+.side-note{margin:0;max-width:30ch;color:var(--mist);font-size:.95rem}
+@media(min-width:900px){
+  .two{grid-template-columns:1fr 1.15fr;gap:84px}
+  .side{position:sticky;top:112px}
+}
+
+/* paper (manifesto) */
+.paper{background:var(--paper);color:var(--ink);background-image:repeating-linear-gradient(to bottom,transparent 0 35px,rgba(79,127,124,.17) 35px 36px)}
+.paper .marker,.paper .side-note{color:var(--ink-soft)}
+.paper .marker::before{background:var(--ink-soft)}
+.paper .marker time{color:var(--ink-soft)}
+.paper h2{color:var(--ink)}
+@media(min-width:900px){.paper::before{content:"";position:absolute;top:0;bottom:0;left:calc(var(--gutter) - 22px);width:1px;background:rgba(201,138,46,.55)}}
+.manifesto{display:grid;gap:26px;max-width:60ch;font-size:clamp(1.05rem,1.45vw,1.22rem);line-height:1.8}
+.manifesto p{margin:0}
+.tenets{list-style:none;margin:30px 0 0;padding:0;max-width:60ch}
+.tenets li{font:italic 500 clamp(1.4rem,2.4vw,1.95rem)/1.2 var(--serif);padding:16px 0;border-top:1px solid rgba(43,36,32,.2)}
+.tenets li:last-child{border-bottom:1px solid rgba(43,36,32,.2)}
+
+/* stories */
+.section-head{display:grid;gap:14px;margin-bottom:clamp(30px,4vw,52px)}
+.hint{margin:0;color:var(--mist-2);font-size:.9rem;font-style:italic}
+.strip{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 var(--gutter);padding:10px var(--gutter) 30px;margin:0 calc(var(--gutter) * -1);scrollbar-width:none;cursor:grab;-webkit-overflow-scrolling:touch}
+.strip::-webkit-scrollbar{display:none}
+.strip.drag{cursor:grabbing;scroll-snap-type:none}
+.card{flex:0 0 min(78vw,300px);scroll-snap-align:start;aspect-ratio:3/4;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:24px;border-radius:18px;background:linear-gradient(165deg,var(--walnut-3),var(--walnut-2) 62%);border:1px solid var(--line);transition:transform .5s var(--ease),border-color .4s,box-shadow .5s var(--ease);will-change:transform}
+.card::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1px;background:var(--lamp);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+.card:hover,.card.active{border-color:rgba(230,169,75,.45);box-shadow:0 30px 60px -40px rgba(0,0,0,.8)}
+.card:hover::before,.card.active::before{transform:scaleX(1)}
+.card .tag{font:400 .76rem/1 var(--sans);color:var(--mist-2)}
+.card h3{margin:14px 0 0;font:italic 500 clamp(1.8rem,3vw,2.3rem)/1.05 var(--serif)}
+.card p{margin:12px 0 0;color:var(--mist);font-size:.92rem;line-height:1.6}
+.card .foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.mini{display:flex;align-items:flex-end;gap:2px;height:26px;width:92px}
+.mini i{flex:1;height:calc(var(--h) * 1%);border-radius:1px;background:var(--mist-2);transform-origin:bottom;transition:background .35s}
+.card:hover .mini i,.card.active .mini i{background:var(--lamp);animation:breathe .9s ease-in-out var(--delay,0s) infinite alternate}
+.card .dur{font:500 .8rem/1 var(--sans);color:var(--mist-2);font-variant-numeric:tabular-nums}
+
+/* steps */
+.steps{background:var(--walnut-2)}
+.timeline{position:relative;list-style:none;margin:0;padding:0 0 0 46px;display:grid;gap:clamp(36px,5vw,58px);max-width:720px}
+.timeline::before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:1px;background:var(--line)}
+.timeline::after{content:"";position:absolute;left:11px;top:8px;width:1px;height:calc((100% - 16px) * var(--draw,0));background:var(--lamp)}
+.step{position:relative}
+.step::before{content:"";position:absolute;left:-46px;top:8px;width:23px;height:23px;border-radius:50%;border:1px solid var(--mist-2);background:var(--walnut-2);transition:border-color .4s,background .4s,box-shadow .4s}
+.step.lit::before{border-color:var(--lamp);background:var(--lamp);box-shadow:0 0 0 7px rgba(230,169,75,.14)}
+.step .n{font:italic 500 1rem/1 var(--serif);color:var(--mist-2)}
+.step h3{margin:6px 0 10px;font:italic 500 clamp(1.7rem,3vw,2.4rem)/1.05 var(--serif)}
+.step p{margin:0;max-width:52ch;color:var(--mist);line-height:1.75}
+
+/* contact */
+.contact{min-height:80vh;min-height:80svh;display:flex;flex-direction:column;justify-content:center;gap:18px;overflow:hidden;isolation:isolate}
+.contact .lamp{left:28%;top:62%;animation:drift2 18s ease-in-out infinite alternate}
+@keyframes drift2{from{left:28%;top:62%}to{left:62%;top:34%}}
+.contact h2{max-width:14ch;font-size:clamp(2.7rem,7.5vw,6.6rem)}
+.contact .lead{margin:0;max-width:40ch;color:var(--mist);font-size:clamp(1rem,1.5vw,1.2rem)}
+.channels{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;padding:14px 22px;border-radius:999px;border:1px solid var(--line);text-decoration:none;font:400 .9rem/1 var(--sans);transition:border-color .35s,background .35s,transform .4s var(--ease)}
+.chip:hover{border-color:var(--lamp);background:rgba(230,169,75,.08);transform:translateY(-2px)}
+.chip.zalo{background:var(--lamp);color:var(--walnut);border-color:var(--lamp);font-weight:500}
+.chip.zalo:hover{background:var(--lamp-2)}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:26px var(--gutter);border-top:1px solid var(--line);color:var(--mist-2);font-size:.82rem}
+footer em{font:italic 500 1rem/1 var(--serif);color:var(--mist)}
+
+/* sticky mobile cta */
+.sticky{position:fixed;left:50%;bottom:18px;z-index:45;transform:translate(-50%,140%);transition:transform .6s var(--ease);box-shadow:0 20px 40px -16px rgba(0,0,0,.7)}
+.sticky.show{transform:translate(-50%,0)}
+@media(min-width:900px){.sticky{display:none}}
+@media(max-width:899px){footer{padding-bottom:96px}}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .curtain{display:none}
+  .hero h1 .l span,.hero .lead,.cta-row,.wave{transform:none;opacity:1}
+  .js .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="curtain" aria-hidden="true"><span>Tô Hoàng</span></div>
+
+<header class="nav">
+  <a class="brand" href="#top">Tô Hoàng<small>kể nhạc</small></a>
+  <nav class="nav-links" aria-label="Các phần">
+    <a href="#ke-nhac">Kể nhạc</a>
+    <a href="#chuyen">Chuyện đã kể</a>
+    <a href="#cach-ke">Cách tôi kể</a>
+    <a href="#lien-he">Liên hệ</a>
+  </nav>
+  <span class="clock">00:00 / 03:48</span>
+  <span class="progress" aria-hidden="true"></span>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="lamp" aria-hidden="true"></div>
+  <p class="marker">Dạo đầu <time>00:00</time></p>
+  <h1>
+    <span class="l"><span>Ai cũng có</span></span>
+    <span class="l"><span>một bài hát</span></span>
+    <span class="l"><span>chưa kịp viết.</span></span>
+  </h1>
+  <p class="lead">Tôi là Tô Hoàng. Tôi nghe chuyện của bạn, rồi kể lại bằng nhạc.</p>
+  <div class="cta-row">
+    <a class="btn" href="#lien-he"><span class="dot" aria-hidden="true"></span>Kể tôi nghe chuyện của bạn</a>
+    <a class="link" href="https://www.tiktok.com/@to._.hoang" target="_blank" rel="noopener">Nghe thử trên TikTok</a>
+  </div>
+  <div class="wave" aria-hidden="true"><i style="--h:42;--delay:-0.44s;--d:1.99s"></i><i style="--h:75;--delay:-0.10s;--d:3.11s"></i><i style="--h:32;--delay:-0.72s;--d:2.41s"></i><i style="--h:53;--delay:-2.09s;--d:2.80s"></i><i style="--h:94;--delay:-0.68s;--d:2.84s"></i><i style="--h:57;--delay:-2.05s;--d:2.44s"></i><i style="--h:93;--delay:-0.07s;--d:3.07s"></i><i style="--h:60;--delay:-1.40s;--d:1.85s"></i><i style="--h:47;--delay:-0.50s;--d:2.29s"></i><i style="--h:45;--delay:-0.62s;--d:2.34s"></i><i style="--h:42;--delay:-2.21s;--d:2.31s"></i><i style="--h:72;--delay:-0.24s;--d:2.96s"></i><i style="--h:93;--delay:-2.08s;--d:1.87s"></i><i style="--h:78;--delay:-1.71s;--d:2.88s"></i><i style="--h:98;--delay:-1.92s;--d:2.61s"></i><i style="--h:61;--delay:-1.81s;--d:2.43s"></i><i style="--h:91;--delay:-0.90s;--d:3.07s"></i><i style="--h:40;--delay:-1.06s;--d:2.66s"></i><i style="--h:41;--delay:-0.51s;--d:3.03s"></i><i style="--h:100;--delay:-0.99s;--d:1.98s"></i><i style="--h:53;--delay:-0.08s;--d:2.80s"></i><i style="--h:52;--delay:-0.48s;--d:2.99s"></i><i style="--h:78;--delay:-0.13s;--d:2.02s"></i><i style="--h:64;--delay:-0.35s;--d:2.35s"></i><i style="--h:39;--delay:-0.84s;--d:2.53s"></i><i style="--h:77;--delay:-1.34s;--d:1.81s"></i><i style="--h:67;--delay:-1.67s;--d:2.07s"></i><i style="--h:88;--delay:-1.62s;--d:2.86s"></i><i style="--h:98;--delay:-0.27s;--d:3.05s"></i><i style="--h:28;--delay:-0.32s;--d:2.70s"></i><i style="--h:63;--delay:-0.94s;--d:2.26s"></i><i style="--h:100;--delay:-2.36s;--d:2.73s"></i><i style="--h:53;--delay:-1.57s;--d:2.13s"></i><i style="--h:45;--delay:-0.59s;--d:2.35s"></i><i style="--h:43;--delay:-0.63s;--d:3.13s"></i><i style="--h:94;--delay:-0.04s;--d:2.52s"></i><i style="--h:65;--delay:-2.12s;--d:2.17s"></i><i style="--h:33;--delay:-1.67s;--d:2.48s"></i><i style="--h:59;--delay:-1.47s;--d:2.75s"></i><i style="--h:89;--delay:-1.44s;--d:2.25s"></i><i style="--h:32;--delay:-0.39s;--d:2.94s"></i><i style="--h:78;--delay:-1.37s;--d:2.57s"></i><i style="--h:30;--delay:-1.39s;--d:2.71s"></i><i style="--h:81;--delay:-0.30s;--d:1.93s"></i><i style="--h:71;--delay:-1.66s;--d:2.48s"></i><i style="--h:93;--delay:-2.04s;--d:2.39s"></i><i style="--h:79;--delay:-1.44s;--d:3.11s"></i><i style="--h:42;--delay:-0.73s;--d:2.05s"></i><i style="--h:19;--delay:-0.14s;--d:2.69s"></i><i style="--h:35;--delay:-0.39s;--d:2.42s"></i><i style="--h:71;--delay:-1.12s;--d:2.95s"></i><i style="--h:21;--delay:-0.60s;--d:2.78s"></i><i style="--h:87;--delay:-1.61s;--d:3.19s"></i><i style="--h:39;--delay:-1.51s;--d:3.17s"></i><i style="--h:63;--delay:-0.79s;--d:2.95s"></i><i style="--h:81;--delay:-2.16s;--d:2.05s"></i></div>
+</section>
+
+<section class="paper" id="ke-nhac">
+  <div class="two">
+    <div class="side">
+      <p class="marker">Phiên khúc 1 <time></time></p>
+      <h2 class="reveal">Kể nhạc, không phải viết nhạc.</h2>
+    </div>
+    <div class="manifesto">
+      <p>Bài hát không bắt đầu từ hợp âm. Nó bắt đầu từ một câu bạn kể vội qua điện thoại, một tấm ảnh cũ trong ví, một cái tên bạn chưa dám gọi lại.</p>
+      <p>Tôi ngồi nghe. Hỏi thêm vài câu. Rồi im lặng một lúc. Giai điệu thường đến sau khoảng im lặng đó.</p>
+      <p>Khi nghe lại, bạn sẽ thấy mình ở trong đó. Không phải vì bài hát hay. Mà vì nó đúng.</p>
+      <ul class="tenets">
+        <li>Nghe trước, viết sau.</li>
+        <li>Mộc, thật, không màu mè.</li>
+        <li>Một bài, một người, một câu chuyện.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="stories" id="chuyen">
+  <div class="section-head">
+    <p class="marker">Điệp khúc <time></time></p>
+    <h2 class="reveal">Những câu chuyện đã kể.</h2>
+    <p class="hint">Kéo ngang để nghe tiếp.</p>
+  </div>
+  <div class="strip">
+    <article class="card reveal" style="--i:0">
+      <div><span class="tag">Gia đình</span><h3>Chuyện của Ba</h3><p>Viết cho người ít nói nhất nhà, từ ba câu chuyện cũ con gái kể lại.</p></div>
+      <div class="foot"><span class="mini" aria-hidden="true"><i style="--h:35;--delay:-0.19s"></i><i style="--h:43;--delay:-0.43s"></i><i style="--h:46;--delay:-0.63s"></i><i style="--h:36;--delay:-0.79s"></i><i style="--h:73;--delay:-0.14s"></i><i style="--h:79;--delay:-0.10s"></i><i style="--h:80;--delay:-0.85s"></i><i style="--h:74;--delay:-0.19s"></i><i style="--h:85;--delay:-0.57s"></i><i style="--h:43;--delay:-0.87s"></i><i style="--h:61;--delay:-0.06s"></i><i style="--h:74;--delay:-0.10s"></i><i style="--h:66;--delay:-0.62s"></i><i style="--h:95;--delay:-0.89s"></i></span><span class="dur">3:42</span></div>
+    </article>
+    <article class="card reveal" style="--i:1">
+      <div><span class="tag">Đám cưới</span><h3>Ngày em mặc áo trắng</h3><p>Một bài hát thay cho lời chúc, hát lần đầu ngay giữa tiệc.</p></div>
+      <div class="foot"><span class="mini" aria-hidden="true"><i style="--h:92;--delay:-0.46s"></i><i style="--h:87;--delay:-0.25s"></i><i style="--h:83;--delay:-0.62s"></i><i style="--h:48;--delay:-0.21s"></i><i style="--h:70;--delay:-0.22s"></i><i style="--h:81;--delay:-0.48s"></i><i style="--h:62;--delay:-0.44s"></i><i style="--h:83;--delay:-0.44s"></i><i style="--h:78;--delay:-0.81s"></i><i style="--h:54;--delay:-0.75s"></i><i style="--h:60;--delay:-0.73s"></i><i style="--h:96;--delay:-0.58s"></i><i style="--h:69;--delay:-0.87s"></i><i style="--h:43;--delay:-0.50s"></i></span><span class="dur">4:05</span></div>
+    </article>
+    <article class="card reveal" style="--i:2">
+      <div><span class="tag">Tuổi trẻ</span><h3>Hai lăm</h3><p>Cho những ai vừa đi qua một năm khó, và vẫn còn ở đây.</p></div>
+      <div class="foot"><span class="mini" aria-hidden="true"><i style="--h:56;--delay:-0.28s"></i><i style="--h:39;--delay:-0.50s"></i><i style="--h:32;--delay:-0.15s"></i><i style="--h:93;--delay:-0.38s"></i><i style="--h:30;--delay:-0.13s"></i><i style="--h:74;--delay:-0.47s"></i><i style="--h:43;--delay:-0.01s"></i><i style="--h:80;--delay:-0.33s"></i><i style="--h:39;--delay:-0.81s"></i><i style="--h:23;--delay:-0.59s"></i><i style="--h:91;--delay:-0.54s"></i><i style="--h:26;--delay:-0.69s"></i><i style="--h:58;--delay:-0.17s"></i><i style="--h:70;--delay:-0.39s"></i></span><span class="dur">3:21</span></div>
+    </article>
+    <article class="card reveal" style="--i:3">
+      <div><span class="tag">Thương hiệu</span><h3>Quán nhỏ cuối ngõ</h3><p>Kể câu chuyện một quán cà phê gia đình bằng giai điệu, thay vì bằng khẩu hiệu.</p></div>
+      <div class="foot"><span class="mini" aria-hidden="true"><i style="--h:57;--delay:-0.23s"></i><i style="--h:22;--delay:-0.70s"></i><i style="--h:26;--delay:-0.38s"></i><i style="--h:68;--delay:-0.76s"></i><i style="--h:94;--delay:-0.79s"></i><i style="--h:50;--delay:-0.17s"></i><i style="--h:47;--delay:-0.02s"></i><i style="--h:89;--delay:-0.85s"></i><i style="--h:26;--delay:-0.69s"></i><i style="--h:77;--delay:-0.60s"></i><i style="--h:91;--delay:-0.66s"></i><i style="--h:51;--delay:-0.60s"></i><i style="--h:97;--delay:-0.33s"></i><i style="--h:64;--delay:-0.71s"></i></span><span class="dur">2:58</span></div>
+    </article>
+    <article class="card reveal" style="--i:4">
+      <div><span class="tag">Thành phố</span><h3>Gửi người ở lại</h3><p>Viết từ phía người rời đi, cho những người vẫn ở đó mỗi chiều.</p></div>
+      <div class="foot"><span class="mini" aria-hidden="true"><i style="--h:34;--delay:-0.69s"></i><i style="--h:79;--delay:-0.75s"></i><i style="--h:87;--delay:-0.66s"></i><i style="--h:21;--delay:-0.52s"></i><i style="--h:34;--delay:-0.61s"></i><i style="--h:40;--delay:-0.76s"></i><i style="--h:66;--delay:-0.29s"></i><i style="--h:29;--delay:-0.36s"></i><i style="--h:79;--delay:-0.48s"></i><i style="--h:72;--delay:-0.28s"></i><i style="--h:39;--delay:-0.14s"></i><i style="--h:44;--delay:-0.10s"></i><i style="--h:99;--delay:-0.69s"></i><i style="--h:90;--delay:-0.06s"></i></span><span class="dur">3:36</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="steps" id="cach-ke">
+  <div class="two">
+    <div class="side">
+      <p class="marker">Đoạn chuyển <time></time></p>
+      <h2 class="reveal">Cách tôi kể.</h2>
+      <p class="side-note">Bốn bước, từ lúc bạn mở lời đến lúc bài hát về tay bạn.</p>
+    </div>
+    <ol class="timeline">
+      <li class="step reveal"><span class="n">Bước 1</span><h3>Nghe</h3><p>Bạn kể. Qua Zalo, qua một buổi cà phê, hay một tin nhắn thật dài lúc nửa đêm. Tôi ghi lại từng chi tiết, kể cả những chi tiết bạn nghĩ là thừa.</p></li>
+      <li class="step reveal"><span class="n">Bước 2</span><h3>Viết</h3><p>Tôi chọn một chi tiết nhỏ nhất làm điểm tựa. Lời trước, giai điệu sau. Bản nháp đầu tiên gửi bạn nghe trước, sửa đến khi bạn thấy đúng là mình.</p></li>
+      <li class="step reveal"><span class="n">Bước 3</span><h3>Hát</h3><p>Thu mộc với guitar, hoặc phối đầy đủ, tùy câu chuyện cần gì. Giọng tôi, hoặc giọng bạn nếu bạn muốn tự kể.</p></li>
+      <li class="step reveal"><span class="n">Bước 4</span><h3>Trao</h3><p>Bạn nhận bài hát, bản lời, và câu chuyện phía sau để kể lại cho đúng người cần nghe.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="contact" id="lien-he">
+  <div class="lamp" aria-hidden="true"></div>
+  <p class="marker">Kết <time></time></p>
+  <h2 class="reveal">Kể tôi nghe chuyện của bạn.</h2>
+  <p class="lead">Không cần gọn gàng. Không cần hay. Chỉ cần thật. Phần còn lại, để tôi lo.</p>
+  <div class="channels">
+    <a class="chip zalo" href="#lien-he">Nhắn qua Zalo</a>
+    <a class="chip" href="https://www.tiktok.com/@to._.hoang" target="_blank" rel="noopener">TikTok</a>
+    <a class="chip" href="https://www.youtube.com/@tohoang1201" target="_blank" rel="noopener">YouTube</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <em>Tô Hoàng Kể Nhạc</em>
+  <span>Mỗi bài hát là một câu chuyện có thật.</span>
+</footer>
+
+<a class="sticky btn" href="#lien-he">Nhắn qua Zalo</a>
+
+<script>
+(function(){
+  var d=document, root=d.documentElement;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover=matchMedia('(hover: hover)').matches;
+  var nav=d.querySelector('.nav'), prog=d.querySelector('.progress'), clock=d.querySelector('.clock');
+  var hero=d.querySelector('.hero'), heroLamp=d.querySelector('.hero .lamp');
+  var bars=[].slice.call(d.querySelectorAll('.wave i'));
+  var timeline=d.querySelector('.timeline'), steps=[].slice.call(d.querySelectorAll('.step'));
+  var sticky=d.querySelector('.sticky'), contact=d.querySelector('.contact');
+  var cues=[].slice.call(d.querySelectorAll('.marker time'));
+  var TOTAL=228;
+
+  function pad(n){return (n<10?'0':'')+n}
+  function fmt(s){s=Math.max(0,Math.round(s));return pad(Math.floor(s/60))+':'+pad(s%60)}
+  function maxScroll(){return Math.max(1,root.scrollHeight-innerHeight)}
+
+  function setCues(){
+    var h=maxScroll();
+    cues.forEach(function(t){
+      var sec=t.closest('section'); if(!sec) return;
+      var y=sec.getBoundingClientRect().top+scrollY;
+      var f=Math.min(1,Math.max(0,y/h));
+      t.textContent=fmt(f*TOTAL);
+    });
+  }
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  d.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  function paintWave(){
+    if(!bars.length) return;
+    var p=Math.min(1,Math.max(0,scrollY/(hero.offsetHeight*.85)));
+    var head=Math.round(p*(bars.length-1));
+    bars.forEach(function(b,i){
+      b.classList.toggle('played',i<head && p>0);
+      b.classList.toggle('head',i===head && p>0);
+    });
+  }
+
+  function drawTimeline(){
+    if(!timeline) return;
+    var r=timeline.getBoundingClientRect();
+    var p=Math.min(1,Math.max(0,(innerHeight*.72-r.top)/r.height));
+    timeline.style.setProperty('--draw',p.toFixed(3));
+    var lineY=r.top+8+(r.height-16)*p;
+    steps.forEach(function(s){ s.classList.toggle('lit',s.getBoundingClientRect().top+20<=lineY); });
+  }
+
+  function onScroll(){
+    var f=scrollY/maxScroll();
+    prog.style.width=(f*100)+'%';
+    clock.textContent=fmt(f*TOTAL)+' / '+fmt(TOTAL);
+    nav.classList.toggle('scrolled',scrollY>40);
+    if(sticky){ var ct=contact.getBoundingClientRect().top; sticky.classList.toggle('show',scrollY>hero.offsetHeight*.8 && ct>innerHeight*.55); }
+    paintWave(); drawTimeline();
+  }
+  var ticking=false;
+  addEventListener('scroll',function(){ if(!ticking){ requestAnimationFrame(function(){ onScroll(); ticking=false; }); ticking=true; } },{passive:true});
+  addEventListener('resize',function(){ setCues(); onScroll(); });
+  addEventListener('load',function(){ setCues(); onScroll(); });
+  setCues(); onScroll();
+
+  if(canHover && !reduce && heroLamp){
+    hero.addEventListener('pointermove',function(e){
+      var r=hero.getBoundingClientRect();
+      heroLamp.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+      heroLamp.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+    });
+  }
+
+  d.querySelectorAll('.card').forEach(function(c){
+    if(canHover && !reduce){
+      c.addEventListener('pointermove',function(e){
+        var r=c.getBoundingClientRect();
+        var x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+        c.style.transform='perspective(900px) rotateX('+(-y*7).toFixed(2)+'deg) rotateY('+(x*9).toFixed(2)+'deg) translateY(-6px)';
+      });
+      c.addEventListener('pointerleave',function(){ c.style.transform=''; });
+    }
+    c.addEventListener('click',function(){ c.classList.toggle('active'); });
+  });
+
+  var strip=d.querySelector('.strip');
+  if(strip){
+    var down=false, sx=0, sl=0;
+    strip.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse') return; down=true; sx=e.clientX; sl=strip.scrollLeft; strip.classList.add('drag'); });
+    addEventListener('pointermove',function(e){ if(!down) return; strip.scrollLeft=sl-(e.clientX-sx); });
+    addEventListener('pointerup',function(){ down=false; strip.classList.remove('drag'); });
+  }
+})();
+</script>
+</body>
+</html>
